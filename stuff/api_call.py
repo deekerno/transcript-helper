@@ -7,7 +7,7 @@ HEADERS = {
 }
 
 PARAMS_SINGLE = {
-	'continous': True,
+	'continuous': True,
 	'max_alternatives': 3,
 	'profanity_filter': False,
 	'smart_formatting': True,
@@ -17,7 +17,7 @@ PARAMS_SINGLE = {
 }
 
 PARAMS_MULTI = {
-	'continous': True,
+	'continuous': True,
 	'max_alternatives': 3,
 	'profanity_filter': False,
 	'smart_formatting': True,
