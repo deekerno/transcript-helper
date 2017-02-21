@@ -13,6 +13,7 @@ class Project:
 	# Set the project slug to the filename of the video
 	def __init__(self, filename):
 		self.slug = splitext(basename(filename))[0]
+		self.audio_dest = self.slug + ".wav"
 
 	def make_proj_dir(self):
 		"""
@@ -63,14 +64,15 @@ class Project:
 		self.audio_seg_dir()
 		self.transcripts_dir()
 
+	# This will create a list of each of the audio segments found in a project.
+	def segment_names(self):
+		self.seg_list = glob(join(self.audio_seg_path, '*.wav'))
+
 	# This will create a list of each of the transcripts in a project folder
 	def transcript_names(self):
 		self.trans_list = glob(join(self.trans_path, '*.json'))
 
-		
-# This will load the credentials for the Bluemix service
-def get_credentials(filename=WATSON_CREDENTIALS):
-	full_path = abspath(expanduser(filename))
-	with open(full_path, 'r') as f:
-		data = json.load(f)
-		return data['creds']
+	# This will load the credentials for the Bluemix service
+	def get_credentials(self, filename=WATSON_CREDENTIALS):
+		with open(filename, 'r') as f:
+			self.data = json.load(f)

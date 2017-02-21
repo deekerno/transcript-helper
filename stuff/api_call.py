@@ -1,6 +1,6 @@
 import requests
 
-ENDPOINT = 'https://stream.watsonplatform.net/speech-to-text/api'
+ENDPOINT = 'https://stream.watsonplatform.net/speech-to-text/api/v1/recognize'
 
 HEADERS = {
 	'content-type': 'audio/wav'
@@ -35,7 +35,7 @@ def call_single_speak(audio_file, username, password):
 			data = f,
 			params = PARAMS_SINGLE,
 			headers = HEADERS,
-			stream = false)
+			stream = False)
 		return response
 
 def call_multi_speak(audio_file, username, password):
@@ -46,5 +46,5 @@ def call_multi_speak(audio_file, username, password):
 			data = f,
 			params = PARAMS_MULTI,
 			headers = HEADERS,
-			stream = false)
+			stream = False)
 		return response

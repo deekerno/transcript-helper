@@ -6,7 +6,7 @@ DEFAULT_VIDEO_AUDIO_CODEC = 'libmp3lame'
 DEFAULT_AUDIOFILE_CODEC = 'pcm_s16le' # 16-bit WAV
 DEFAULT_AUDIOFILE_BITRATE = '16k'
 DEFAULT_ZEROES_PADDING = 5
-DEFAULT_AUDIO_SEGMENT_DURATION_SEC = 300
+DEFAULT_AUDIO_SEGMENT_DURATION_SEC = 60
 
 def audio_extraction(vid_src, audio_dest, audio_codec=DEFAULT_AUDIOFILE_CODEC,
 				audio_bitrate=DEFAULT_AUDIOFILE_BITRATE):
@@ -40,6 +40,5 @@ def audio_segmentation(audio_src, audio_seg_dir,
 		start_sec = end_sec
 		seg_full_path = join(audio_seg_dir, seg_name)
 		segment.write_audiofile(seg_full_path)
-		yield seg_full_path
 
 	print("Audio segmentation complete.")

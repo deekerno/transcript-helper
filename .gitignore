@@ -93,3 +93,6 @@ watson_creds.json
 
 # Projects folder
 projects/
+
+# Test stuff
+test.*
