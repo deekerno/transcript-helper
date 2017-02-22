@@ -57,5 +57,11 @@ for trans in p.trans_list:
 	with open(trans) as data_file:
 		data = json.load(data_file)
 	for result in data["results"]:
-		print(result["alternatives"][0]["transcript"])
+		alts = result["alternatives"]
+		best = alts.pop(0)
+		print("Best Confidence Transcript:")
+		print(best["transcript"])
+		print("Alternative Transcripts:")
+		for item in alts:
+			print(item["transcript"])
 		print("\n")
