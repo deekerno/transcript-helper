@@ -71,6 +71,7 @@ class Project:
 	# This will create a list of each of the transcripts in a project folder
 	def transcript_names(self):
 		self.trans_list = glob(join(self.trans_path, '*.json'))
+		self.trans_list = sorted(self.trans_list, key=lambda x: int(basename(x).split('-')[0]))
 
 	# This will load the credentials for the Bluemix service
 	def get_credentials(self, filename=WATSON_CREDENTIALS):
