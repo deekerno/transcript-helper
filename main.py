@@ -52,16 +52,18 @@ for job in jobs:
 # Generate a sorted list of transcript JSON files
 p.transcript_names()
 
-# For each transcript JSON, print the transcripts of highest confidence
-for trans in p.trans_list:
-	with open(trans) as data_file:
-		data = json.load(data_file)
-	for result in data["results"]:
-		alts = result["alternatives"]
-		best = alts.pop(0)
-		print("Best Confidence Transcript:")
-		print(best["transcript"])
-		print("Alternative Transcripts:")
-		for item in alts:
-			print(item["transcript"])
-		print("\n")
+# For each transcript JSON, write both the transcripts of highest confidence
+# and any alternative transcripts that may have been supplied to a file
+with open(p.full_transcript_path, 'w') as f:
+	for trans in p.trans_list:
+		with open(trans) as data_file:
+			data = json.load(data_file)
+		for result in data["results"]:
+			alts = result["alternatives"]
+			best = alts.pop(0)
+			f.write("Best Confidence Transcript:\n")
+			f.write(best["transcript"] + "\n")
+			f.write("Alternative Transcripts:\n")
+			for item in alts:
+				f.write(item["transcript"] + "\n")
+			f.write("\n")

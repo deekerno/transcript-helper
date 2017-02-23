@@ -22,3 +22,7 @@ You may want to change a few of the default options in the `audio_op.py` module 
 2. Run python main.py *video_file*
 
 And that's it! The utility will create all the folders needed to organize the intermediary data. It will extract and segment the audio according to the defined parameters, and then (using multiple threads) send the segments to the Bluemix API for transcription. The transcripts will be compiled in the transcripts folder of the respective project directory.
+
+## TODO
++ Clean up code
++ Add command line arguments for custom segment length and audio with multiple speakers

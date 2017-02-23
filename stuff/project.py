@@ -5,9 +5,7 @@ import json
 
 PROJECTS_DIR = join(".", "projects")
 WATSON_CREDENTIALS = "watson_creds.json"
-FULL_TRANSCRIPT_BASENAME = 'full-transcript.json'
-LINES_TRANSCRIPT_BASENAME = 'lines-transcript.csv'
-WORDS_TRANSCRIPT_BASENAME = 'words-transcript.csv'
+FULL_TRANSCRIPT_BASENAME = 'full-transcript.txt'
 
 class Project:
 	# Set the project slug to the filename of the video
@@ -51,8 +49,6 @@ class Project:
 			makedirs(self.trans_path, exist_ok = True)
 			print("Transcript directory for project created")
 			self.full_transcript_path = join(self.path, FULL_TRANSCRIPT_BASENAME)
-			self.lines_transcript_path = join(self.path, LINES_TRANSCRIPT_BASENAME)
-			self.words_transcript_path = join(self.path, WORDS_TRANSCRIPT_BASENAME)
 		except OSError as ex:
 			if ex.errno != errno.EEXIST:
 				print("Transcript directory cannot be created!")
