@@ -6,7 +6,7 @@ DEFAULT_VIDEO_AUDIO_CODEC = 'libmp3lame'
 DEFAULT_AUDIOFILE_CODEC = 'pcm_s16le' # 16-bit WAV
 DEFAULT_AUDIOFILE_BITRATE = '16k'
 DEFAULT_ZEROES_PADDING = 5
-DEFAULT_AUDIO_SEGMENT_DURATION_SEC = 60
+DEFAULT_AUDIO_SEGMENT_DURATION_SEC = 180
 
 def audio_extraction(vid_src, audio_dest, audio_codec=DEFAULT_AUDIOFILE_CODEC,
 				audio_bitrate=DEFAULT_AUDIOFILE_BITRATE):
@@ -19,10 +19,24 @@ def audio_extraction(vid_src, audio_dest, audio_codec=DEFAULT_AUDIOFILE_CODEC,
 		print("Unexpected error!")
 		raise
 
+# Really hacky way of making audio-only files into WAVs. Yes, transcoding from
+# lossy to lossless is bad, but since this will be used on mostly voice-only
+# stuff, I'm not terribly worried about a loss of fidelity.
+def audio_conversion(audio_src, audio_dest, audio_codec=DEFAULT_AUDIOFILE_CODEC,
+				audio_bitrate=DEFAULT_AUDIOFILE_BITRATE):
+	try:
+		audio = AudioFileClip(audio_src)
+		audio.write_audiofile(audio_dest, codec=audio_codec, bitrate=audio_bitrate)
+		print("Audio file extracted.")
+	except:
+		print("Unexpected error!")
+		raise
+
 def audio_segmentation(audio_src, audio_seg_dir,
 					seg_dur=DEFAULT_AUDIO_SEGMENT_DURATION_SEC,
 					pad_zeroes=DEFAULT_ZEROES_PADDING):
-	src_basename, src_ext = splitext(audio_src)
+	src_basename = splitext(audio_src)[0]
+	src_ext = ".wav"
 	audio = AudioFileClip(audio_src)
 	total_sec = audio.duration
 	start_sec = 0

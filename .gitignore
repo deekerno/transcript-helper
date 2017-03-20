@@ -96,3 +96,6 @@ projects/
 
 # Test stuff
 test.*
+
+# Videos
+videos/

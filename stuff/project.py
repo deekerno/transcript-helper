@@ -9,9 +9,13 @@ FULL_TRANSCRIPT_BASENAME = 'full-transcript.txt'
 
 class Project:
 	# Set the project slug to the filename of the video
-	def __init__(self, filename):
+	def __init__(self, filename, flag_no_seg, flag_multi, flag_audio_only):
+		self.filename = filename
 		self.slug = splitext(basename(filename))[0]
 		self.audio_dest = self.slug + ".wav"
+		self.flag_audio_only = flag_audio_only
+		self.flag_no_seg = flag_no_seg
+		self.flag_multi = flag_multi
 
 	def make_proj_dir(self):
 		"""
@@ -57,7 +61,11 @@ class Project:
 	# Easy way to create the required folders
 	def create_req_paths(self):
 		self.make_proj_dir()
-		self.audio_seg_dir()
+		
+		# Only create the segment folder if the no_segment flag is false 
+		if not self.flag_no_seg:
+			self.audio_seg_dir()
+
 		self.transcripts_dir()
 
 	# This will create a list of each of the audio segments found in a project.

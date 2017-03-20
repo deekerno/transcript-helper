@@ -7,47 +7,62 @@ import argparse
 import json
 import sys
 
-def call_helper(segment, trans_filename, data):
-	resp = call_single_speak(
-		segment,
-		username = data['username'],
-		password = data['password'])
+parser = argparse.ArgumentParser()
+parser.add_argument("file", help="the video (or audio-only) file to be transcribed")
+parser.add_argument("-a", "--audio_only", help="use when there is only audio (no video) supplied", action="store_true")
+parser.add_argument("-m", "--multi", help="turn on multi-speaker detection", action="store_true")
+parser.add_argument("-ns", "--no_seg", help="process audio in one file, instead of segments", action="store_true")
+args = parser.parse_args()
+
+def call_helper(audio, trans_filename, data, flag_multi):
+	if flag_multi:
+		resp = call_multi_speak(
+			audio,
+			username = data['username'],
+			password = data['password'])
+	else:
+		resp = call_single_speak(
+			audio,
+			username = data['username'],
+			password = data['password'])	
 	with open(trans_filename, 'w') as t:
-		t.write(resp.text)
-		print("Transcribed:\n\t", trans_filename)
-
-if len(sys.argv) < 2:
-	print("ERROR: No video file supplied.")
-	print("Syntax: python main.py <video_file>")
-	sys.exit(2)
-
-video_file = sys.argv[1]
+			t.write(resp.text)
+			print("Transcribed:\n\t", trans_filename)
 
 # Create a project using the video file supplied in the original call
-p = Project(video_file)
+p = Project(args.file, args.no_seg, args.multi, args.audio_only)
 p.create_req_paths()
 p.get_credentials()
 
 # Extract and segment the audio from the video. Then, construct a list of segments
-audio_extraction(video_file, p.audio_dest)
-audio_segmentation(p.audio_dest, p.audio_seg_path)
-p.segment_names()
+if not p.flag_audio_only:
+	audio_extraction(p.filename, p.audio_dest)
+else:
+	audio_conversion(p.filename, p.audio_dest)
 
-jobs = []	# list of jobs for multithreading purposes
+if not p.flag_no_seg:
+	audio_segmentation(p.audio_dest, p.audio_seg_path)
+	p.segment_names()
 
-# For each segment, create a process that will handle the api call for
-# that part and write the response to a JSON file of the same name
-for seg in p.seg_list:
-	time_filename = splitext(basename(seg))[0]
-	trans_filename = join(p.trans_path, time_filename) + ".json"
+	jobs = []	# list of jobs for multithreading purposes
+
+	# For each segment, create a process that will handle the api call for
+	# that part and write the response to a JSON file of the same name
+	for seg in p.seg_list:
+		time_filename = splitext(basename(seg))[0]
+		trans_filename = join(p.trans_path, time_filename) + ".json"
+		if not exists(trans_filename):
+			print("Sending to Watson Speech-to-Text:\n\t", time_filename)
+			job = Process(target=call_helper,args=(seg, trans_filename, p.data, p.flag_multi))
+			job.start()
+			jobs.append(job)
+
+	for job in jobs:
+		job.join()
+else:
+	trans_filename = join(p.trans_path, p.slug) + ".json"
 	if not exists(trans_filename):
-		print("Sending to Watson Speech-to-Text:\n\t", time_filename)
-		job = Process(target=call_helper,args=(seg, trans_filename, p.data))
-		job.start()
-		jobs.append(job)
-
-for job in jobs:
-	job.join()
+		call_helper(p.audio_dest, trans_filename, p.data, p.flag_multi)
 
 # Generate a sorted list of transcript JSON files
 p.transcript_names()
