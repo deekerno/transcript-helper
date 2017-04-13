@@ -14,6 +14,7 @@ parser.add_argument("-m", "--multi", help="turn on multi-speaker detection", act
 parser.add_argument("-ns", "--no_seg", help="process audio in one file, instead of segments", action="store_true")
 args = parser.parse_args()
 
+# If multi-speaker detection is requested, run call_multi_speak. Otherwise, run the method for single speakers.
 def call_helper(audio, trans_filename, data, flag_multi):
 	if flag_multi:
 		resp = call_multi_speak(

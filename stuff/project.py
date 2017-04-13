@@ -12,7 +12,7 @@ class Project:
 	def __init__(self, filename, flag_no_seg, flag_multi, flag_audio_only):
 		self.filename = filename
 		self.slug = splitext(basename(filename))[0]
-		self.audio_dest = self.slug + ".wav"
+		self.audio_dest = self.slug + ".webm"
 		self.flag_audio_only = flag_audio_only
 		self.flag_no_seg = flag_no_seg
 		self.flag_multi = flag_multi
@@ -75,7 +75,8 @@ class Project:
 	# This will create a list of each of the transcripts in a project folder
 	def transcript_names(self):
 		self.trans_list = glob(join(self.trans_path, '*.json'))
-		self.trans_list = sorted(self.trans_list, key=lambda x: int(basename(x).split('-')[0]))
+		if not self.flag_no_seg:
+			self.trans_list = sorted(self.trans_list, key=lambda x: int(basename(x).split('-')[0]))
 
 	# This will load the credentials for the Bluemix service
 	def get_credentials(self, filename=WATSON_CREDENTIALS):

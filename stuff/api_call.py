@@ -3,7 +3,7 @@ import requests
 ENDPOINT = 'https://stream.watsonplatform.net/speech-to-text/api/v1/recognize'
 
 HEADERS = {
-	'content-type': 'audio/wav'
+	'content-type': 'audio/webm'
 }
 
 PARAMS_SINGLE = {
