@@ -51,7 +51,7 @@ class Project:
 		try:
 			self.trans_path = join(self.path, "transcripts")
 			makedirs(self.trans_path, exist_ok = True)
-			print("Transcript directory for project created")
+			print("Transcript directory for project created.")
 			self.full_transcript_path = join(self.path, FULL_TRANSCRIPT_BASENAME)
 		except OSError as ex:
 			if ex.errno != errno.EEXIST:
@@ -70,7 +70,8 @@ class Project:
 
 	# This will create a list of each of the audio segments found in a project.
 	def segment_names(self):
-		self.seg_list = glob(join(self.audio_seg_path, '*.wav'))
+		self.seg_list = glob(join(self.audio_seg_path, '*.webm'))
+		print("Segment list created.")
 
 	# This will create a list of each of the transcripts in a project folder
 	def transcript_names(self):

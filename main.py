@@ -63,6 +63,7 @@ if not p.flag_no_seg:
 else:
 	trans_filename = join(p.trans_path, p.slug) + ".json"
 	if not exists(trans_filename):
+		print("Sending audio to Watson Speech-to-Text.")
 		call_helper(p.audio_dest, trans_filename, p.data, p.flag_multi)
 
 # Generate a sorted list of transcript JSON files

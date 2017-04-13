@@ -12,7 +12,7 @@ def audio_extraction(vid_src, audio_dest, audio_codec=DEFAULT_AUDIOFILE_CODEC,
 	try:
 		video = VideoFileClip(vid_src)
 		audio = video.audio
-		audio.write_audiofile(audio_dest, codec=audio_codec, bitrate=audio_bitrate)
+		audio.write_audiofile(audio_dest, codec=audio_codec, bitrate=audio_bitrate, verbose=False, progress_bar=False)
 		print("Audio file extracted.")
 	except:
 		print("Unexpected error!")
@@ -25,7 +25,7 @@ def audio_conversion(audio_src, audio_dest, audio_codec=DEFAULT_AUDIOFILE_CODEC,
 				audio_bitrate=DEFAULT_AUDIOFILE_BITRATE):
 	try:
 		audio = AudioFileClip(audio_src)
-		audio.write_audiofile(audio_dest, codec=audio_codec, bitrate=audio_bitrate)
+		audio.write_audiofile(audio_dest, codec=audio_codec, bitrate=audio_bitrate, verbose=False, progress_bar=False)
 		print("Audio file extracted.")
 	except:
 		print("Unexpected error!")
@@ -44,7 +44,7 @@ def audio_segmentation(audio_src, audio_seg_dir,
 		end_sec = start_sec + seg_dur
 		if end_sec > total_sec:
 			end_sec = ceil(total_sec)
-			segment = audio.subclip(start_sec, end_sec)
+			segment = audio.subclip(start_sec)
 		else:
 			segment = audio.subclip(start_sec, end_sec)
 		seg_name = "%s-%s%s" % (
@@ -52,6 +52,6 @@ def audio_segmentation(audio_src, audio_seg_dir,
 			str(end_sec).rjust(pad_zeroes, "0"), src_ext)
 		start_sec = end_sec
 		seg_full_path = join(audio_seg_dir, seg_name)
-		segment.write_audiofile(seg_full_path, codec=DEFAULT_AUDIOFILE_CODEC, bitrate=DEFAULT_AUDIOFILE_BITRATE)
+		segment.write_audiofile(seg_full_path, codec=DEFAULT_AUDIOFILE_CODEC, bitrate=DEFAULT_AUDIOFILE_BITRATE, verbose=False, progress_bar=False)
 
 	print("Audio segmentation complete.")
