@@ -91,6 +91,7 @@ ENV/
 # Watson Credentials
 watson_creds.json
 
+
 # Projects folder
 projects/
 
@@ -99,3 +100,6 @@ test.*
 
 # Videos
 videos/
+
+# Weird stuff
+.DS_Store
