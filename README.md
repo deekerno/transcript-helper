@@ -1,5 +1,5 @@
 # transcript-helper
-A utility that uses IBM's Bluemix Speech-to-Text service to assist in adding transcripts to videos in order to maintain ADA compliance at a particular institution of higher learning. Basically, it makes my job easier. Heavily influenced by Dan Nguyen's [watson-word-watcher](https://github.com/dannguyen/watson-word-watcher).
+A utility that uses IBM's Bluemix Speech-to-Text service to assist in adding transcripts to videos in order to maintain ADA compliance at a particular institution of higher learning. Basically, it makes my job easier.
 
 ## Getting Started
 ### Requirements
@@ -24,9 +24,13 @@ You may want to change a few of the default options in the `audio_op.py` module 
 There are a number of flags available to change the flow of the utility. They are as follows:
   + audio-only `-a`: use when there is only audio (no video) supplied
   + multiple speaker detection `-m`: enable multi-speaker detection
-  + no segmentation `-ns`: process audio in one file, instead of segments
+  + no segmentation `-ns`: process audio in one file, instead of segments (more information below)
 
 And that's it! The utility will create all the folders needed to organize the intermediary data. It will extract and segment the audio according to the defined parameters, and then send the segments for transcription to the Bluemix API, according to the options you define. The transcripts will be compiled in the transcripts folder of the respective project directory.
 
 ## Additional Information
-Originally, the utility formatted the audio as WAV files to send to the Bluemix service. However, the service institutes a 100 MB restriction for non-streaming transcription. As WAV is a lossless format, the size of certain files became an issue, even at smaller lengths. The ability to use audio-only webms was introduced in a recent update. Some crude testing showed that the use of webms and the libvorbis codec cut the file size by about 85-90%. 
+### libvorbis
+Originally, the utility formatted the audio as WAV files to send to the Bluemix service. However, the service institutes a 100 MB restriction for non-streaming transcription. As WAV is a lossless format, the size of certain files became an issue, even at smaller lengths. The ability to use audio-only webms was introduced in a recent update. Some crude testing showed that the use of webms and the libvorbis codec cut the file size by about 85-90%.
+
+### Segmentation: Speed vs. Accuracy
+The documentation indicates that the accuracy of a transcription process improves as the length of the provided audio file/stream increases. The segmentation option allows one to use multithreading to send all of the segments to the service at the same time, which decreases the total transcription time to the length of the longest segment. Thus, there is a tradeoff between speed and accuracy. Hypothetically, the most accurate transcription will be one in which the entire audio file is passed to the service. The fastest transcription will be one in which segments are very short.
