@@ -1,3 +1,6 @@
+# Author: Alexander Decurnou
+# Team: iDev
+
 import requests
 
 ENDPOINT = 'https://stream.watsonplatform.net/speech-to-text/api/v1/recognize'
@@ -7,7 +10,7 @@ HEADERS = {
 }
 
 PARAMS_SINGLE = {
-    'continuous': True,
+    #'continuous': True,
     'max_alternatives': 3,
     'profanity_filter': False,
     'smart_formatting': True,
@@ -17,7 +20,7 @@ PARAMS_SINGLE = {
 }
 
 PARAMS_MULTI = {
-    'continuous': True,
+    #'continuous': True,
     'max_alternatives': 3,
     'profanity_filter': False,
     'smart_formatting': True,

@@ -1,6 +1,10 @@
+# Author: Alexander Decurnou
+# Team: iDev
+
 from math import ceil
 from moviepy.editor import VideoFileClip, AudioFileClip
 from os.path import join
+import subprocess
 
 DEFAULT_AUDIOFILE_CODEC = 'libvorbis'  # used to create webms
 DEFAULT_AUDIOFILE_BITRATE = None
@@ -8,14 +12,17 @@ DEFAULT_ZEROES_PADDING = 5
 DEFAULT_AUDIO_SEGMENT_DURATION_SEC = 180
 
 
-def audio_extraction(vid_src, audio_dest, audio_codec=DEFAULT_AUDIOFILE_CODEC,
+def audio_extraction(path, audio_dest, audio_codec=DEFAULT_AUDIOFILE_CODEC,
                      audio_bitrate=DEFAULT_AUDIOFILE_BITRATE):
     try:
-        video = VideoFileClip(vid_src)
-        audio = video.audio
-        audio.write_audiofile(audio_dest, codec=audio_codec,
-                              bitrate=audio_bitrate, verbose=False,
-                              progress_bar=False)
+        print("Extracting audio...")
+        #video = VideoFileClip(vid_src)
+        #audio = video.audio
+        #audio.write_audiofile(audio_dest, codec=audio_codec,
+        #                      bitrate=audio_bitrate, verbose=False,
+        #                      progress_bar=False)
+        command = "ffmpeg -i {} -vn -acodec {} -y {}".format(path, audio_codec, audio_dest)
+        subprocess.call(command, shell=True)
         print("Audio file extracted.")
     except:
         print("Unexpected error!")
@@ -28,6 +35,7 @@ def audio_extraction(vid_src, audio_dest, audio_codec=DEFAULT_AUDIOFILE_CODEC,
 def audio_conversion(audio_src, audio_dest, audio_codec=DEFAULT_AUDIOFILE_CODEC,
                      audio_bitrate=DEFAULT_AUDIOFILE_BITRATE):
     try:
+        print("Extracting audio...")
         audio = AudioFileClip(audio_src)
         audio.write_audiofile(audio_dest, codec=audio_codec,
                               bitrate=audio_bitrate, verbose=False,
@@ -46,6 +54,7 @@ def audio_segmentation(audio_src, audio_seg_dir,
     total_sec = audio.duration
     start_sec = 0
 
+    print("Segmenting audio...")
     while start_sec < total_sec:
         end_sec = start_sec + seg_dur
         if end_sec > total_sec:

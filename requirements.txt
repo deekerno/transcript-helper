@@ -1,4 +1,3 @@
-ffmpeg
 moviepy
 requests
 youtube-dl

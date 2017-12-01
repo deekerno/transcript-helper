@@ -1,3 +1,6 @@
+# Author: Alexander Decurnou
+# Team: iDev
+
 from glob import glob
 from os import makedirs
 from os.path import join, basename, splitext, expanduser, abspath
@@ -6,19 +9,27 @@ import json
 PROJECTS_DIR = join(".", "projects")
 WATSON_CREDENTIALS = "watson_creds.json"
 FULL_TRANSCRIPT_BASENAME = 'full-transcript.txt'
+DEFAULT_AUDIO_SEGMENT_DURATION_SEC = 180
 
 
 class Project:
     # Set the project slug to the filename of the video
-    def __init__(self, filename, flag_no_seg, flag_multi, flag_audio_only):
-        self.filename = filename
+    def __init__(self, filename, flag_no_seg, flag_multi, flag_audio_only, flag_give_alts):
+        self.abspath = abspath(filename)
+        self.filename = str(filename)
         self.slug = splitext(basename(filename))[0]
-        self.audio_dest = self.slug + ".webm"
+        self.audio_dest = str(self.slug + ".webm")
         self.flag_audio_only = flag_audio_only
         self.flag_no_seg = flag_no_seg
         self.flag_multi = flag_multi
+        self.flag_give_alts = flag_give_alts
 
-    def make_proj_dir(self):
+        if not flag_no_seg and seg_length > 0:
+            self.seg_length = seg_length
+        else:
+            self.seg_length = DEFAULT_AUDIO_SEGMENT_DURATION_SEC
+
+    def _make_proj_dir(self):
         """
         This will take the project's slug and expand to the full path. It will
         then attempt to create a directory for the project. exist_ok is set to
@@ -37,7 +48,7 @@ class Project:
                 raise
 
     # Same as make_proj_dir, only it creates a subfolder in the project folder
-    def audio_seg_dir(self):
+    def _audio_seg_dir(self):
         try:
             self.audio_seg_path = join(self.path, "audio_seg")
             makedirs(self.audio_seg_path, exist_ok=True)
@@ -48,7 +59,7 @@ class Project:
                 raise
 
     # Seems to be a pattern here.
-    def transcripts_dir(self):
+    def _transcripts_dir(self):
         try:
             self.trans_path = join(self.path, "transcripts")
             makedirs(self.trans_path, exist_ok=True)
@@ -61,13 +72,13 @@ class Project:
 
     # Easy way to create the required folders
     def create_req_paths(self):
-        self.make_proj_dir()
+        self._make_proj_dir()
 
         # Only create the segment folder if the no_segment flag is false
         if not self.flag_no_seg:
-            self.audio_seg_dir()
+            self._audio_seg_dir()
 
-        self.transcripts_dir()
+        self._transcripts_dir()
 
     # This will create a list of each of the audio segments found in a project.
     def segment_names(self):

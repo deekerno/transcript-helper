@@ -1,8 +1,12 @@
+# Author: Alexander Decurnou
+# Team: iDev
+
 from multiprocessing import Process
 from os import path
 from stuff import api_call
 from stuff import audio_op
 from stuff import project
+from stuff import srt_maker
 import argparse
 import json
 
@@ -11,6 +15,9 @@ parser.add_argument("file", help="the video (or audio-only) file to be transcrib
 parser.add_argument("-a", "--audio_only", help="use when there is only audio (no video) supplied", action="store_true")
 parser.add_argument("-m", "--multi", help="turn on multi-speaker detection", action="store_true")
 parser.add_argument("-ns", "--no_seg", help="process audio in one file, instead of segments", action="store_true")
+parser.add_argument("-ga", "--give_alts", help="give alternative transcripts as well", action="store_true")
+parser.add_argument("-sl", "--seg_length", help="length of segments in seconds", type=int)
+
 args = parser.parse_args()
 
 
@@ -31,7 +38,7 @@ def call_helper(audio, trans_filename, data, flag_multi):
 
 
 # Create a project using the video file supplied in the original call
-p = project.Project(args.file, args.no_seg, args.multi, args.audio_only)
+p = project.Project(args.file, args.no_seg, args.multi, args.audio_only, args.give_alts)
 
 p.create_req_paths()
 p.get_credentials()
@@ -72,16 +79,22 @@ p.transcript_names()
 
 # For each transcript JSON, write both the transcripts of highest confidence
 # and any alternative transcripts that may have been supplied to a file
-with open(p.full_transcript_path, 'w') as f:
+"""with open(p.full_transcript_path, 'w') as f:
     for trans in p.trans_list:
         with open(trans) as data_file:
             data = json.load(data_file)
         for result in data["results"]:
-            alts = result["alternatives"]
+            timestamps = result["alternatives"]["timestamps"]
             best = alts.pop(0)
-            f.write("Best Confidence Transcript:\n")
-            f.write(best["transcript"] + "\n")
-            f.write("Alternative Transcripts:\n")
-            for item in alts:
-                f.write(item["transcript"] + "\n")
-            f.write("\n")
+            if not p.flag_give_alts:
+                f.write(best["transcript"] + "\n")
+            else:
+                f.write("Best Confidence Transcript:\n")
+                f.write(best["transcript"] + "\n")
+                f.write("Alternative Transcripts:\n")
+                for item in alts:
+                    f.write(item["transcript"] + "\n")
+                f.write("\n")"""
+
+s = srt_maker.SRT(trans_filename, p.slug)
+s.write_to_file(p.path)
