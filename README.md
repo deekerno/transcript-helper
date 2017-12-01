@@ -28,5 +28,9 @@ There are a number of flags available to change the flow of the utility. They ar
 
 And that's it! The utility will create all the folders needed to organize the intermediary data. It will extract and segment the audio according to the defined parameters, and then send the segments for transcription to the Bluemix API, according to the options you define. An SRT file with timestamps and all _should_ be written to the project directory.
 
+## TODO
++ Design algorithm using spaCy NLP module that will flag "out-of-place" words (hopefully in less than O(n^2) time)
+
 ## Additional Information
-Originally, the utility formatted the audio as WAV files to send to the Bluemix service. However, the service institutes a 100 MB restriction for non-streaming transcription. As WAV is a lossless format, the size of certain files became an issue, even at smaller lengths. The ability to use audio-only webms was introduced in a recent update. Some crude testing showed that the use of webms and the libvorbis codec cut the file size by about 85-90%. 
+Originally, the utility formatted the audio as WAV files to send to the Bluemix service. However, the service institutes a 100 MB restriction for non-streaming transcription. As WAV is a lossless format, the size of certain files became an issue, even at smaller lengths. The ability to use audio-only webms was introduced in a recent update. Some crude testing showed that the use of webms and the libvorbis codec cut the file size by about 85-90%.
+
