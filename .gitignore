@@ -91,7 +91,6 @@ ENV/
 # Watson Credentials
 watson_creds.json
 
-
 # Projects folder
 projects/
 

@@ -24,10 +24,10 @@ class Project:
         self.flag_multi = flag_multi
         self.flag_give_alts = flag_give_alts
 
-        if not flag_no_seg and seg_length > 0:
-            self.seg_length = seg_length
-        else:
-            self.seg_length = DEFAULT_AUDIO_SEGMENT_DURATION_SEC
+        #if not flag_no_seg and seg_length > 0:
+        #    self.seg_length = seg_length
+        #else:
+        #    self.seg_length = DEFAULT_AUDIO_SEGMENT_DURATION_SEC
 
     def _make_proj_dir(self):
         """

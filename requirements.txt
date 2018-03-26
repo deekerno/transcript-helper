@@ -1,3 +1,4 @@
 moviepy
 requests
+spacy
 youtube-dl

@@ -22,9 +22,9 @@ class SRT(object):
 	def _collect_pieces(self):
 		with open(self.text, 'r') as f:
 			j = json.loads(f.read())
-			print("Transcript successfully read.")
+			print("Generating SRT file...")
 			n = len(j['results'])
-			print("{} chunks in transcript".format(n))
+			# print("{} chunks in transcript".format(n))
 			for i in range(n-1):
 				print(i)
 				self.pieces.append(j['results'][i]['alternatives'][0]['transcript'])
@@ -58,3 +58,4 @@ class SRT(object):
 		captions = self._create_file()
 		with open(join(path, self.filename), 'w') as f:
 			f.writelines(captions)
+			print("SRT file generated.")

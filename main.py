@@ -34,7 +34,7 @@ def call_helper(audio, trans_filename, data, flag_multi):
             password=data['password'])  # single speakers
     with open(trans_filename, 'w') as t:
             t.write(resp.text)
-            print("Transcribed:\n\t", trans_filename)
+            print("Transcription complete.")
 
 
 # Create a project using the video file supplied in the original call
